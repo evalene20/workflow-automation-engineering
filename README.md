@@ -2,7 +2,7 @@
 BPMN Exercises - RA2411026011244
 
 
-## Scenario 1: Employee Leave Approval Process
+## Scenario 1: Employee Leave Approval
 
 ### Description
 This process handles automated balance verification and multi-tier management sign-off for employee leave requests.
@@ -54,7 +54,7 @@ An e-commerce order fulfillment pipeline managing inventory checks, payment gate
 
 ---
 
-## Scenario 3: IT Service Request Handling
+## Scenario 3: IT Service Request
 
 ### Description
 An internal IT service management (ITSM) ticketing workflow dividing incoming corporate support queries based on complexity and resolution capabilities.
