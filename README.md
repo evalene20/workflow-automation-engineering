@@ -68,7 +68,3 @@ An internal IT service management (ITSM) ticketing workflow dividing incoming co
 
 ---
 
-## Deployment & Verification Notes
-* All models use standard **BPMN 2.0 notation elements** compatible with Camunda Engine architectures.
-* Gateways use distinct, unique **Default Flow** fallbacks to prevent runtime exceptions or stuck tokens.
-* Variable naming conventions use standard strict camelCase syntax throughout (e.g., `isAvailable`, `ticketSeverity`).
