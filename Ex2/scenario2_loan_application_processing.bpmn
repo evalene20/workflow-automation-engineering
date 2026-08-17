@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_LoanApplication" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.49.0">
+  <bpmn:process id="Process_LoanApplication" name="Loan Application Processing" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Loan Application Submitted">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="Gateway_DocsValid" name="Documents Valid?">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_DocsInvalid</bpmn:outgoing>
+      <bpmn:outgoing>Flow_DocsValid</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="EndEvent_DocsRejected" name="Application Rejected (Invalid Documents)">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_Eligible" name="Eligible?">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_NotEligible</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Eligible</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="EndEvent_NotEligible" name="Application Rejected&#10;(Not Eligible)">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_OfficerDecision" name="Loan Officer Decision?">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_OfficerRejects</bpmn:outgoing>
+      <bpmn:outgoing>Flow_OfficerApproves</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="EndEvent_Rejected" name="Loan Rejected">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_Approved" name="Loan Approved">
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_VerifyDocuments" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_VerifyDocuments" targetRef="Gateway_DocsValid" />
+    <bpmn:sequenceFlow id="Flow_DocsInvalid" name="Invalid" sourceRef="Gateway_DocsValid" targetRef="Task_RejectDocs" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_RejectDocs" targetRef="EndEvent_DocsRejected" />
+    <bpmn:sequenceFlow id="Flow_DocsValid" name="Valid" sourceRef="Gateway_DocsValid" targetRef="Task_CheckEligibility" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_CheckEligibility" targetRef="Gateway_Eligible" />
+    <bpmn:sequenceFlow id="Flow_NotEligible" name="Not Eligible" sourceRef="Gateway_Eligible" targetRef="Task_RejectEligibility" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_RejectEligibility" targetRef="EndEvent_NotEligible" />
+    <bpmn:sequenceFlow id="Flow_Eligible" name="Eligible" sourceRef="Gateway_Eligible" targetRef="Task_ForwardToOfficer" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_ForwardToOfficer" targetRef="Gateway_OfficerDecision" />
+    <bpmn:sequenceFlow id="Flow_OfficerRejects" name="Rejects" sourceRef="Gateway_OfficerDecision" targetRef="Task_SendRejection" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_SendRejection" targetRef="EndEvent_Rejected" />
+    <bpmn:sequenceFlow id="Flow_OfficerApproves" name="Approves" sourceRef="Gateway_OfficerDecision" targetRef="Task_DisburseLoan" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Task_DisburseLoan" targetRef="EndEvent_Approved" />
+    <bpmn:serviceTask id="Task_VerifyDocuments" name="Verify Documents &#38; Credit Score">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_CheckEligibility" name="Check Eligibility (Credit Score &#38; Income)">
+      <bpmn:incoming>Flow_DocsValid</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_DisburseLoan" name="Disburse Loan Amount &#38; Send Approval Notification">
+      <bpmn:incoming>Flow_OfficerApproves</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="Task_SendRejection" name="Send Rejection Notification">
+      <bpmn:incoming>Flow_OfficerRejects</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sendTask id="Task_RejectEligibility" name="Send Rejection Notification (Not Eligible)">
+      <bpmn:incoming>Flow_NotEligible</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sendTask id="Task_RejectDocs" name="Reject Application &#38; Notify Customer">
+      <bpmn:incoming>Flow_DocsInvalid</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:userTask id="Task_ForwardToOfficer" name="Forward to Loan Officer for Final Approval">
+      <bpmn:incoming>Flow_Eligible</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_LoanApplication">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="160" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="137" y="226" width="82" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_DocsValid_di" bpmnElement="Gateway_DocsValid" isMarkerVisible="true">
+        <dc:Bounds x="400" y="175" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="380" y="233" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_DocsRejected_di" bpmnElement="EndEvent_DocsRejected">
+        <dc:Bounds x="680" y="62" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="626" y="104" width="143" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Eligible_di" bpmnElement="Gateway_Eligible" isMarkerVisible="true">
+        <dc:Bounds x="680" y="175" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="684" y="151" width="42" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_NotEligible_di" bpmnElement="EndEvent_NotEligible">
+        <dc:Bounds x="960" y="322" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="922" y="370" width="101" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Rejected_di" bpmnElement="EndEvent_Rejected">
+        <dc:Bounds x="1240" y="322" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1222" y="371" width="71" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Approved_di" bpmnElement="EndEvent_Approved">
+        <dc:Bounds x="1240" y="62" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1220" y="111" width="75" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1cetxwk_di" bpmnElement="Task_VerifyDocuments">
+        <dc:Bounds x="250" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1bh0dtb_di" bpmnElement="Task_CheckEligibility">
+        <dc:Bounds x="520" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0l0a6xs_di" bpmnElement="Task_DisburseLoan">
+        <dc:Bounds x="1080" y="40" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00quufx_di" bpmnElement="Task_SendRejection">
+        <dc:Bounds x="1080" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_037m50b_di" bpmnElement="Task_RejectEligibility">
+        <dc:Bounds x="800" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0hdzwap_di" bpmnElement="Task_RejectDocs">
+        <dc:Bounds x="520" y="40" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1e0lk83_di" bpmnElement="Task_ForwardToOfficer">
+        <dc:Bounds x="800" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_OfficerDecision_di" bpmnElement="Gateway_OfficerDecision" isMarkerVisible="true">
+        <dc:Bounds x="985" y="175" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1045" y="186" width="60" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="196" y="200" />
+        <di:waypoint x="250" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="350" y="200" />
+        <di:waypoint x="400" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_DocsInvalid_di" bpmnElement="Flow_DocsInvalid">
+        <di:waypoint x="425" y="175" />
+        <di:waypoint x="425" y="80" />
+        <di:waypoint x="520" y="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="434" y="111" width="32" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="620" y="80" />
+        <di:waypoint x="680" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_DocsValid_di" bpmnElement="Flow_DocsValid">
+        <di:waypoint x="450" y="200" />
+        <di:waypoint x="520" y="200" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="473" y="175" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="620" y="200" />
+        <di:waypoint x="680" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NotEligible_di" bpmnElement="Flow_NotEligible">
+        <di:waypoint x="705" y="225" />
+        <di:waypoint x="705" y="340" />
+        <di:waypoint x="800" y="340" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="712" y="268" width="56" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="900" y="340" />
+        <di:waypoint x="960" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Eligible_di" bpmnElement="Flow_Eligible">
+        <di:waypoint x="730" y="200" />
+        <di:waypoint x="800" y="200" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="747" y="175" width="36" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="900" y="200" />
+        <di:waypoint x="985" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_OfficerRejects_di" bpmnElement="Flow_OfficerRejects">
+        <di:waypoint x="1010" y="225" />
+        <di:waypoint x="1010" y="340" />
+        <di:waypoint x="1080" y="340" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1022" y="275" width="37" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
+        <di:waypoint x="1180" y="340" />
+        <di:waypoint x="1240" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_OfficerApproves_di" bpmnElement="Flow_OfficerApproves">
+        <di:waypoint x="1010" y="175" />
+        <di:waypoint x="1010" y="80" />
+        <di:waypoint x="1080" y="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1021" y="111" width="47" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
+        <di:waypoint x="1180" y="80" />
+        <di:waypoint x="1240" y="80" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

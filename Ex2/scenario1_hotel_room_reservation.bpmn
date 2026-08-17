@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_HotelReservation" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.49.0">
+  <bpmn:process id="Process_HotelReservation" name="Hotel Room Reservation" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Booking Request Submitted">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="Gateway_Availability" name="Rooms Available?">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_NoRooms</bpmn:outgoing>
+      <bpmn:outgoing>Flow_RoomsAvailable</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="EndEvent_NoRooms" name="No Rooms Available">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_Payment" name="Payment Successful?">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_PaymentFailed</bpmn:outgoing>
+      <bpmn:outgoing>Flow_06w4wfl</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="EndEvent_PaymentFailed" name="Payment Failed">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_Confirmed" name="Booking Confirmed">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_NoRooms" name="No" sourceRef="Gateway_Availability" targetRef="Task_NotifyNoRooms" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_NotifyNoRooms" targetRef="EndEvent_NoRooms" />
+    <bpmn:sequenceFlow id="Flow_RoomsAvailable" name="Yes" sourceRef="Gateway_Availability" targetRef="Task_RequestPayment" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_RequestPayment" targetRef="Gateway_Payment" />
+    <bpmn:sequenceFlow id="Flow_PaymentFailed" name="No" sourceRef="Gateway_Payment" targetRef="Task_NotifyPaymentFailure" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_NotifyPaymentFailure" targetRef="EndEvent_PaymentFailed" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_ConfirmBooking" targetRef="Task_SendEmail" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_SendEmail" targetRef="EndEvent_Confirmed" />
+    <bpmn:serviceTask id="Task_CheckAvailability" name="Check Room Availability">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_CheckAvailability" targetRef="Gateway_Availability" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_CheckAvailability" />
+    <bpmn:sequenceFlow id="Flow_06w4wfl" sourceRef="Gateway_Payment" targetRef="Task_ConfirmBooking" />
+    <bpmn:serviceTask id="Task_ConfirmBooking" name="Confirm Booking &#38; Generate Reference Number">
+      <bpmn:incoming>Flow_06w4wfl</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="Task_NotifyNoRooms" name="Notify Guest: No Rooms Available">
+      <bpmn:incoming>Flow_NoRooms</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sendTask id="Task_NotifyPaymentFailure" name="Notify Guest: Payment Failed">
+      <bpmn:incoming>Flow_PaymentFailed</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:serviceTask id="Task_RequestPayment" name="Request Payment (Advance / Deposit)">
+      <bpmn:incoming>Flow_RoomsAvailable</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="Task_SendEmail" name="Send Booking Confirmation Email">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:sendTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_HotelReservation">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="160" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="136" y="226" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Availability_di" bpmnElement="Gateway_Availability" isMarkerVisible="true">
+        <dc:Bounds x="400" y="175" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="380" y="233" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_NoRooms_di" bpmnElement="EndEvent_NoRooms">
+        <dc:Bounds x="680" y="62" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Payment_di" bpmnElement="Gateway_Payment" isMarkerVisible="true">
+        <dc:Bounds x="680" y="175" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="675" y="137.5" width="60" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_PaymentFailed_di" bpmnElement="EndEvent_PaymentFailed">
+        <dc:Bounds x="960" y="322" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Confirmed_di" bpmnElement="EndEvent_Confirmed">
+        <dc:Bounds x="1120" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16s6zu6_di" bpmnElement="Task_CheckAvailability">
+        <dc:Bounds x="250" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08uwrfh_di" bpmnElement="Task_ConfirmBooking">
+        <dc:Bounds x="800" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qlqg47_di" bpmnElement="Task_NotifyNoRooms">
+        <dc:Bounds x="520" y="40" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_07al5pg_di" bpmnElement="Task_NotifyPaymentFailure">
+        <dc:Bounds x="800" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xmrwci_di" bpmnElement="Task_RequestPayment">
+        <dc:Bounds x="520" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05gxwl5_di" bpmnElement="Task_SendEmail">
+        <dc:Bounds x="960" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_NoRooms_di" bpmnElement="Flow_NoRooms">
+        <di:waypoint x="425" y="175" />
+        <di:waypoint x="425" y="80" />
+        <di:waypoint x="520" y="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="433" y="118" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="620" y="80" />
+        <di:waypoint x="680" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RoomsAvailable_di" bpmnElement="Flow_RoomsAvailable">
+        <di:waypoint x="450" y="200" />
+        <di:waypoint x="520" y="200" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="476" y="175" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="620" y="200" />
+        <di:waypoint x="680" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PaymentFailed_di" bpmnElement="Flow_PaymentFailed">
+        <di:waypoint x="705" y="225" />
+        <di:waypoint x="705" y="340" />
+        <di:waypoint x="800" y="340" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="713" y="273" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="900" y="340" />
+        <di:waypoint x="960" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="900" y="200" />
+        <di:waypoint x="960" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
+        <di:waypoint x="1060" y="200" />
+        <di:waypoint x="1120" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="350" y="200" />
+        <di:waypoint x="400" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="196" y="200" />
+        <di:waypoint x="250" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06w4wfl_di" bpmnElement="Flow_06w4wfl">
+        <di:waypoint x="730" y="200" />
+        <di:waypoint x="800" y="200" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
