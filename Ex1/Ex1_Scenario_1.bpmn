@@ -25,10 +25,7 @@
     <bpmn:sequenceFlow id="Flow_0pou201" sourceRef="Gateway_199ce7o" targetRef="Activity_0s0et2q">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=balanceSufficient=false</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:intermediateThrowEvent id="Event_0inmbg2">
-      <bpmn:incoming>Flow_09vi5t0</bpmn:incoming>
-    </bpmn:intermediateThrowEvent>
-    <bpmn:sequenceFlow id="Flow_09vi5t0" sourceRef="Activity_0s0et2q" targetRef="Event_0inmbg2" />
+    <bpmn:sequenceFlow id="Flow_09vi5t0" sourceRef="Activity_0s0et2q" targetRef="Event_0r9kxay" />
     <bpmn:sequenceFlow id="Flow_03g5dt4" sourceRef="Gateway_199ce7o" targetRef="Activity_1nsfkjh">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=balanceSufficient = true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -48,15 +45,11 @@
     <bpmn:sequenceFlow id="Flow_0612a6w" sourceRef="Activity_1nsfkjh" targetRef="Gateway_0peaoou" />
     <bpmn:task id="Activity_1c5zrgx" name="Send Rejection Notification">
       <bpmn:incoming>Flow_01zmx03</bpmn:incoming>
-      <bpmn:outgoing>Flow_1fdxl1d</bpmn:outgoing>
+      <bpmn:outgoing>Flow_060utpo</bpmn:outgoing>
     </bpmn:task>
     <bpmn:sequenceFlow id="Flow_01zmx03" sourceRef="Gateway_0peaoou" targetRef="Activity_1c5zrgx">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=managerApproval = false</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:intermediateThrowEvent id="Event_0jva58d">
-      <bpmn:incoming>Flow_1fdxl1d</bpmn:incoming>
-    </bpmn:intermediateThrowEvent>
-    <bpmn:sequenceFlow id="Flow_1fdxl1d" sourceRef="Activity_1c5zrgx" targetRef="Event_0jva58d" />
     <bpmn:sequenceFlow id="Flow_1pwltaa" sourceRef="Gateway_0peaoou" targetRef="Activity_1geaicd">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=managerApproval = true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -75,10 +68,17 @@
       <bpmn:incoming>Flow_0y9l7cw</bpmn:incoming>
       <bpmn:outgoing>Flow_0h3sj0w</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:intermediateThrowEvent id="Event_1pw3w4r">
+    <bpmn:sequenceFlow id="Flow_0h3sj0w" sourceRef="Activity_0d873kp" targetRef="Event_1rmg4gz" />
+    <bpmn:endEvent id="Event_0r9kxay">
+      <bpmn:incoming>Flow_09vi5t0</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_1mscoje">
+      <bpmn:incoming>Flow_060utpo</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_060utpo" sourceRef="Activity_1c5zrgx" targetRef="Event_1mscoje" />
+    <bpmn:endEvent id="Event_1rmg4gz">
       <bpmn:incoming>Flow_0h3sj0w</bpmn:incoming>
-    </bpmn:intermediateThrowEvent>
-    <bpmn:sequenceFlow id="Flow_0h3sj0w" sourceRef="Activity_0d873kp" targetRef="Event_1pw3w4r" />
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1a37buw">
@@ -101,9 +101,6 @@
         <dc:Bounds x="420" y="250" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0inmbg2_di" bpmnElement="Event_0inmbg2">
-        <dc:Bounds x="452" y="372" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1jws5hs_di" bpmnElement="Activity_1nsfkjh">
         <dc:Bounds x="550" y="130" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -117,9 +114,6 @@
         <dc:Bounds x="680" y="240" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0jva58d_di" bpmnElement="Event_0jva58d">
-        <dc:Bounds x="712" y="362" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0q59cle_di" bpmnElement="Activity_1geaicd">
         <dc:Bounds x="810" y="130" width="100" height="80" />
         <bpmndi:BPMNLabel />
@@ -127,7 +121,13 @@
       <bpmndi:BPMNShape id="Activity_1exjjo2_di" bpmnElement="Activity_0d873kp">
         <dc:Bounds x="970" y="130" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1pw3w4r_di" bpmnElement="Event_1pw3w4r">
+      <bpmndi:BPMNShape id="Event_0r9kxay_di" bpmnElement="Event_0r9kxay">
+        <dc:Bounds x="452" y="372" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1mscoje_di" bpmnElement="Event_1mscoje">
+        <dc:Bounds x="712" y="372" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1rmg4gz_di" bpmnElement="Event_1rmg4gz">
         <dc:Bounds x="1132" y="152" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0brixv7_di" bpmnElement="Flow_0brixv7">
@@ -158,10 +158,6 @@
         <di:waypoint x="730" y="195" />
         <di:waypoint x="730" y="240" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1fdxl1d_di" bpmnElement="Flow_1fdxl1d">
-        <di:waypoint x="730" y="320" />
-        <di:waypoint x="730" y="362" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1pwltaa_di" bpmnElement="Flow_1pwltaa">
         <di:waypoint x="755" y="170" />
         <di:waypoint x="810" y="170" />
@@ -173,6 +169,10 @@
       <bpmndi:BPMNEdge id="Flow_0h3sj0w_di" bpmnElement="Flow_0h3sj0w">
         <di:waypoint x="1070" y="170" />
         <di:waypoint x="1132" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_060utpo_di" bpmnElement="Flow_060utpo">
+        <di:waypoint x="730" y="320" />
+        <di:waypoint x="730" y="372" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

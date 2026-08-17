@@ -104,10 +104,7 @@
       <bpmn:outgoing>Flow_0cs0ct6</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_0cs0ct6" sourceRef="Activity_12szyeq" targetRef="Activity_1nldm60" />
-    <bpmn:intermediateThrowEvent id="Event_0gcnm54" name="Request Resolved">
-      <bpmn:incoming>Flow_1ovfm21</bpmn:incoming>
-    </bpmn:intermediateThrowEvent>
-    <bpmn:sequenceFlow id="Flow_1ovfm21" sourceRef="Activity_1nldm60" targetRef="Event_0gcnm54" />
+    <bpmn:sequenceFlow id="Flow_1ovfm21" sourceRef="Activity_1nldm60" targetRef="Event_1u3h1kz" />
     <bpmn:serviceTask id="Activity_1nldm60" name="Send Resolution Notification">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="send-resolution-notification" />
@@ -115,6 +112,9 @@
       <bpmn:incoming>Flow_0cs0ct6</bpmn:incoming>
       <bpmn:outgoing>Flow_1ovfm21</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_1u3h1kz" name="Request Resolved">
+      <bpmn:incoming>Flow_1ovfm21</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1qwxkqb">
@@ -170,10 +170,10 @@
         <dc:Bounds x="1570" y="370" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0gcnm54_di" bpmnElement="Event_0gcnm54">
-        <dc:Bounds x="1762" y="392" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_1u3h1kz_di" bpmnElement="Event_1u3h1kz">
+        <dc:Bounds x="1772" y="392" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1735" y="435" width="90" height="14" />
+          <dc:Bounds x="1745" y="435" width="90" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0scry58_di" bpmnElement="Flow_0scry58">
@@ -236,7 +236,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1ovfm21_di" bpmnElement="Flow_1ovfm21">
         <di:waypoint x="1670" y="410" />
-        <di:waypoint x="1762" y="410" />
+        <di:waypoint x="1772" y="410" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
