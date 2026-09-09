@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/"
+             xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/"
+             xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+             xmlns:camunda="http://camunda.org/schema/1.0/dmn"
+             id="Definitions_EvaluateLeave"
+             name="Evaluate Leave"
+             namespace="http://camunda.org/schema/1.0/dmn"
+             exporter="Claude" exporterVersion="1.0">
+
+  <decision id="EvaluateLeaveDecision" name="Evaluate Leave">
+    <decisionTable id="DecisionTable_EvaluateLeave" hitPolicy="FIRST">
+
+      <input id="Input_SufficientBalance" label="Sufficient Balance?">
+        <inputExpression id="InputExpression_SufficientBalance" typeRef="boolean">
+          <text>numberOfDays &lt;= leaveBalance</text>
+        </inputExpression>
+      </input>
+
+      <input id="Input_LeaveType" label="Leave Type">
+        <inputExpression id="InputExpression_LeaveType" typeRef="string">
+          <text>leaveType</text>
+        </inputExpression>
+        <inputValues id="InputValues_LeaveType">
+          <text>"Casual","Sick","Earned"</text>
+        </inputValues>
+      </input>
+
+      <input id="Input_NumberOfDays" label="Number of Days">
+        <inputExpression id="InputExpression_NumberOfDays" typeRef="number">
+          <text>numberOfDays</text>
+        </inputExpression>
+      </input>
+
+      <output id="Output_RoutingDecision" label="Routing Decision" name="routingDecision" typeRef="string">
+        <outputValues id="OutputValues_RoutingDecision">
+          <text>"AUTO_APPROVE","MANAGER_REVIEW","INSUFFICIENT_BALANCE"</text>
+        </outputValues>
+      </output>
+
+      <!-- Rule 1: balance check always wins, regardless of leave type or days requested -->
+      <rule id="Rule_1">
+        <inputEntry id="InputEntry_1_1">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_1_2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_1_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_1_1">
+          <text>"INSUFFICIENT_BALANCE"</text>
+        </outputEntry>
+      </rule>
+
+      <!-- Rule 2: Sick leave, 3 days or fewer, balance OK -> auto-approve -->
+      <rule id="Rule_2">
+        <inputEntry id="InputEntry_2_1">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_2_2">
+          <text>"Sick"</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_2_3">
+          <text>&lt;= 3</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_2_1">
+          <text>"AUTO_APPROVE"</text>
+        </outputEntry>
+      </rule>
+
+      <!-- Rule 3: everything else with sufficient balance (Casual, Earned, or Sick > 3 days) -->
+      <rule id="Rule_3">
+        <inputEntry id="InputEntry_3_1">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_3_2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_3_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_3_1">
+          <text>"MANAGER_REVIEW"</text>
+        </outputEntry>
+      </rule>
+
+    </decisionTable>
+  </decision>
+
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_1">
+      <dmndi:DMNShape id="DMNShape_EvaluateLeaveDecision" dmnElementRef="EvaluateLeaveDecision">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+
+</definitions>
