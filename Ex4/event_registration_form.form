@@ -1,0 +1,62 @@
+{
+  "components": [
+    {
+      "label": "Full Name",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_name",
+        "columns": null
+      },
+      "id": "Field_AttendeeName",
+      "key": "attendeeName",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Event Date",
+      "type": "datetime",
+      "subtype": "date",
+      "dateLabel": "Event Date",
+      "layout": {
+        "row": "Row_date",
+        "columns": null
+      },
+      "id": "Field_EventDate",
+      "key": "eventDate",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Reason for Attending",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_reason",
+        "columns": null
+      },
+      "id": "Field_Reason",
+      "key": "reason",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Submit Registration",
+      "type": "submit",
+      "layout": {
+        "row": "Row_submit",
+        "columns": null
+      },
+      "id": "Field_Submit"
+    }
+  ],
+  "type": "form",
+  "id": "EventRegistrationForm",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.9.0",
+  "exporter": {
+    "name": "Claude",
+    "version": "1.0"
+  }
+}
