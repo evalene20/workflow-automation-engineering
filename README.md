@@ -33,7 +33,7 @@ Focuses on building, deploying, and executing a complete **Event Registration** 
 *   **Execution Lifecycle:** Deployed the process to Camunda 8, claimed and completed the task inside **Tasklist**, and audited the captured variables inside **Operate**.
 
 
-###  Ex 5: Hostel Out-Pass Workflow Lab
+###  Ex 5
 Build a **Hostel Out-Pass Request** process that runs on a Camunda 8 SaaS cluster, with all the business logic in a Spring Boot app on their laptop. It covers the four things every Camunda 8 + Spring project needs: deploying a model from code, starting an instance over REST, running service tasks as job workers, and a human task in Tasklist.
 
 The process logic:
