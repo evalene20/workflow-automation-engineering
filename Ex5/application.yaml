@@ -1,0 +1,9 @@
+camunda:
+  client:
+    mode: saas
+    auth:
+      client-id: "LUU-r0YP04aK6aphZT9wHDIdz2YmgUqN"
+      client-secret: "YlV7xRdfYal9JJe1L-.nP_e-b.68PNn8XWgT~5L3o-_5uuXdsDe3y1AgUO6tICAU"
+    cloud:
+      cluster-id: "51507f3f-15f8-4121-a88b-760a63b91ffd"
+      region: "sin-1"

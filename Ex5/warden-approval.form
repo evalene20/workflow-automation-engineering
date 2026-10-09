@@ -1,0 +1,25 @@
+{
+  "components": [
+    {
+      "text": "### Hostel Out-Pass Request\n**Student Name:** {{studentName}}\n**Registration Number:** {{regNo}}\n**Hostel Block:** {{hostelBlock}}\n**Timeline:** From {{outDate}} to {{returnDate}}\n**Total Nights:** {{nights}}\n**Purpose:** {{purpose}}",
+      "type": "text",
+      "id": "Field_OutpassPresentation"
+    },
+    {
+      "label": "Approve this out-pass request",
+      "type": "checkbox",
+      "id": "Field_WardenCheckbox",
+      "key": "approved"
+    },
+    {
+      "label": "Warden Remarks",
+      "type": "textarea",
+      "id": "Field_WardenRemarks",
+      "key": "wardenRemarks"
+    }
+  ],
+  "type": "default",
+  "id": "warden-approval-form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0"
+}
